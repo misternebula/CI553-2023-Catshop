@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Thu Oct 19 11:27:22 BST 2023:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-018b-4779-bae9-00000ef1a628 
+on database directory C:\Users\hp549\OneDrive - University of Brighton\OO Dev\CI553-2023-Catshop\catshop.db with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@76ed5528 
+Loaded from file:/C:/Users/hp549/OneDrive%20-%20University%20of%20Brighton/OO%20Dev/CI553-2023-Catshop/lib/db-derby-10.14.2.0-lib/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=20.0.1+9-29
+user.dir=C:\Users\hp549\OneDrive - University of Brighton\OO Dev\CI553-2023-Catshop
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
