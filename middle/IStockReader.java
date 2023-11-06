@@ -10,7 +10,7 @@ import javax.swing.*;
   * @version 2.0
   */
 
-public interface StockReader
+public interface IStockReader
 {
 
  /**

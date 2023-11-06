@@ -3,7 +3,7 @@ package clients.shopDisplay;
 import debug.DEBUG;
 import middle.MiddleFactory;
 import middle.OrderException;
-import middle.OrderProcessing;
+import middle.IOrderProcessing;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +22,7 @@ import java.util.Observable;
 
 public class DisplayModel extends Observable
 {
-  private OrderProcessing theOrder = null;
+  private IOrderProcessing theOrder = null;
 
   /**
    * Set up initial connection to the order processing system

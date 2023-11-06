@@ -1,10 +1,8 @@
 package clients.customer;
 
-import catalogue.Basket;
-import catalogue.BetterBasket;
 import clients.Picture;
 import middle.MiddleFactory;
-import middle.StockReader;
+import middle.IStockReader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +34,7 @@ public class CustomerView implements Observer
   private final JButton     theBtClear = new JButton( Name.CLEAR );
 
   private Picture thePicture = new Picture(80,80);
-  private StockReader theStock   = null;
+  private IStockReader theStock   = null;
   private CustomerController cont= null;
 
   /**

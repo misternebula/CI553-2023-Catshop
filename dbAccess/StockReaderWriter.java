@@ -10,7 +10,7 @@ package dbAccess;
 import catalogue.Product;
 import debug.DEBUG;
 import middle.StockException;
-import middle.StockReadWriter;
+import middle.IStockReaderWriter;
 
 import java.sql.SQLException;
 
@@ -22,12 +22,12 @@ import java.sql.SQLException;
 /**
   * Implements read/write access to the stock database.
   */
-public class StockRW extends StockR implements StockReadWriter 
+public class StockReaderWriter extends StockReader implements IStockReaderWriter
 {
   /*
    * Connects to database
    */
-  public StockRW() throws StockException
+  public StockReaderWriter() throws StockException
   {    
     super();        // Connection done in StockR's constructor
   }

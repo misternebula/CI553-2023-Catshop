@@ -4,8 +4,8 @@ import catalogue.Basket;
 import debug.DEBUG;
 import middle.MiddleFactory;
 import middle.OrderException;
-import middle.OrderProcessing;
-import middle.StockReadWriter;
+import middle.IOrderProcessing;
+import middle.IStockReaderWriter;
 
 import java.util.Observable;
 import java.util.concurrent.atomic.AtomicReference;
@@ -19,8 +19,8 @@ public class PickModel extends Observable
 {
   private AtomicReference<Basket> theBasket = new AtomicReference<>(); 
 
-  private StockReadWriter theStock   = null;
-  private OrderProcessing theOrder   = null;
+  private IStockReaderWriter theStock   = null;
+  private IOrderProcessing theOrder   = null;
   private String          theAction  = "";
   
   private StateOf         worker   = new StateOf();

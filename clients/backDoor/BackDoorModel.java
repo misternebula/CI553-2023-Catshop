@@ -1,12 +1,11 @@
 package clients.backDoor;
 
 import catalogue.Basket;
-import catalogue.BetterBasket;
 import catalogue.Product;
 import debug.DEBUG;
 import middle.MiddleFactory;
 import middle.StockException;
-import middle.StockReadWriter;
+import middle.IStockReaderWriter;
 
 import java.util.Observable;
 
@@ -20,7 +19,7 @@ public class BackDoorModel extends Observable
   private Basket      theBasket  = null;            // Bought items
   private String      pn = "";                      // Product being processed
 
-  private StockReadWriter theStock     = null;
+  private IStockReaderWriter theStock     = null;
 
   /*
    * Construct the model of the back door client

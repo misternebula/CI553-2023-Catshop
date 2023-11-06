@@ -2,7 +2,7 @@ package clients.collection;
 
 import debug.DEBUG;
 import middle.MiddleFactory;
-import middle.OrderProcessing;
+import middle.IOrderProcessing;
 
 import java.util.Observable;
 
@@ -16,7 +16,7 @@ public class CollectModel extends Observable
 {
   private String      theAction   = "";
   private String      theOutput   = "";
-  private OrderProcessing theOrder     = null;
+  private IOrderProcessing theOrder     = null;
 
   /*
    * Construct the model of the Collection client

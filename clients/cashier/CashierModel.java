@@ -22,8 +22,8 @@ public class CashierModel extends Observable
 
   private String      pn = "";                      // Product being processed
 
-  private StockReadWriter theStock     = null;
-  private OrderProcessing theOrder     = null;
+  private IStockReaderWriter theStock     = null;
+  private IOrderProcessing theOrder     = null;
 
   /**
    * Construct the model of the Cashier

@@ -16,14 +16,14 @@ import java.util.Map;
  * @version 2.0
  */
 
-public class      R_Order
+public class RemoteOrder
        extends    UnicastRemoteObject
-       implements RemoteOrder_I
+       implements IRemoteOrder
 {
   private static final long serialVersionUID = 1;
   private Order aOrder = null;
 
-  public R_Order( String url )
+  public RemoteOrder(String url )
          throws RemoteException, OrderException
   {
     aOrder = new Order();

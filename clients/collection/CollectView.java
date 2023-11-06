@@ -1,7 +1,7 @@
 package clients.collection;
 
 import middle.MiddleFactory;
-import middle.OrderProcessing;
+import middle.IOrderProcessing;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +27,7 @@ public class CollectView implements Observer
   private final JScrollPane theSP      = new JScrollPane();
   private final JButton     theBtCollect= new JButton( COLLECT );
  
-  private OrderProcessing   theOrder = null;
+  private IOrderProcessing theOrder = null;
   private CollectController cont     = null;
 
   /**

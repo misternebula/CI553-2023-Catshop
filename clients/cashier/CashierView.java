@@ -2,8 +2,8 @@ package clients.cashier;
 
 import catalogue.Basket;
 import middle.MiddleFactory;
-import middle.OrderProcessing;
-import middle.StockReadWriter;
+import middle.IOrderProcessing;
+import middle.IStockReaderWriter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,8 +32,8 @@ public class CashierView implements Observer
   private final JButton     theBtBuy   = new JButton( BUY );
   private final JButton     theBtBought= new JButton( BOUGHT );
 
-  private StockReadWriter theStock     = null;
-  private OrderProcessing theOrder     = null;
+  private IStockReaderWriter theStock     = null;
+  private IOrderProcessing theOrder     = null;
   private CashierController cont       = null;
   
   /**

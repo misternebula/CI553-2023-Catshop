@@ -4,9 +4,9 @@ import catalogue.Basket;
 import catalogue.Product;
 import debug.DEBUG;
 import middle.MiddleFactory;
-import middle.OrderProcessing;
+import middle.IOrderProcessing;
 import middle.StockException;
-import middle.StockReader;
+import middle.IStockReader;
 
 import javax.swing.*;
 import java.util.Observable;
@@ -23,8 +23,8 @@ public class CustomerModel extends Observable
 
   private String      pn = "";                    // Product being processed
 
-  private StockReader     theStock     = null;
-  private OrderProcessing theOrder     = null;
+  private IStockReader theStock     = null;
+  private IOrderProcessing theOrder     = null;
   private ImageIcon       thePic       = null;
 
   /*

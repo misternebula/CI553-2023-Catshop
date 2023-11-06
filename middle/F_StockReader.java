@@ -11,7 +11,7 @@ package middle;
 
 import catalogue.Product;
 import debug.DEBUG;
-import remote.RemoteStockR_I;
+import remote.IRemoteStockReader;
 
 import javax.swing.*;
 import java.rmi.Naming;
@@ -21,12 +21,12 @@ import java.rmi.RemoteException;
  * Setup connection to the middle tier
  */
 
-public class F_StockR implements StockReader
+public class F_StockReader implements IStockReader
 {
-  private RemoteStockR_I aR_StockR   = null;
+  private IRemoteStockReader aR_StockR   = null;
   private String         theStockURL = null;
 
-  public F_StockR( String url )
+  public F_StockReader(String url )
   {
     DEBUG.trace("F_StockR: %s", url );
     theStockURL = url;
@@ -37,7 +37,7 @@ public class F_StockR implements StockReader
     try                                             // Setup
     {                                               //  connection
       aR_StockR =                                   //  Connect to
-        (RemoteStockR_I) Naming.lookup(theStockURL);// Stub returned
+        (IRemoteStockReader) Naming.lookup(theStockURL);// Stub returned
     }
     catch ( Exception e )                           // Failure to
     {                                               //  attach to the

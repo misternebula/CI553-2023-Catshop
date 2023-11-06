@@ -2,7 +2,7 @@ package middle;
 
 import catalogue.Basket;
 import debug.DEBUG;
-import remote.RemoteOrder_I;
+import remote.IRemoteOrder;
 
 import java.rmi.Naming;
 import java.util.List;
@@ -19,9 +19,9 @@ import java.util.Map;
  * @version 2.0
  */
 
-public class F_Order implements OrderProcessing
+public class F_Order implements IOrderProcessing
 {
-  private RemoteOrder_I aR_Order    = null;
+  private IRemoteOrder aR_Order    = null;
   private String        theOrderURL = null;
 
   public F_Order(String url)
@@ -34,7 +34,7 @@ public class F_Order implements OrderProcessing
     try                                            // Setup
     {                                              //  connection
       aR_Order =                                   //  Connect to
-       (RemoteOrder_I) Naming.lookup(theOrderURL); // Stub returned
+       (IRemoteOrder) Naming.lookup(theOrderURL); // Stub returned
     }
     catch ( Exception e )                          // Failure to
     {                                              //  attach to the

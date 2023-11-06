@@ -13,7 +13,7 @@ import java.rmi.RemoteException;
  * @version 2.0
  */
 
-public interface RemoteStockR_I
+public interface IRemoteStockReader
        extends Remote
 {
   boolean   exists(String number)

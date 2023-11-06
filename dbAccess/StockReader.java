@@ -10,7 +10,7 @@ package dbAccess;
 import catalogue.Product;
 import debug.DEBUG;
 import middle.StockException;
-import middle.StockReader;
+import middle.IStockReader;
 
 import javax.swing.*;
 import java.sql.*;
@@ -25,7 +25,7 @@ import java.sql.*;
 /**
   * Implements read only access to the stock database.
   */
-public class StockR implements StockReader
+public class StockReader implements IStockReader
 {
   private Connection theCon    = null;      // Connection to database
   private Statement  theStmt   = null;      // Statement object
@@ -35,7 +35,7 @@ public class StockR implements StockReader
    * Uses a factory method to help setup the connection
    * @throws StockException if problem
    */
-  public StockR()
+  public StockReader()
          throws StockException
   {
     try

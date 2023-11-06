@@ -5,9 +5,7 @@ import catalogue.Basket;
 import catalogue.Product;
 import debug.DEBUG;
 import middle.OrderException;
-import middle.OrderProcessing;
-
-import java.util.stream.Collectors;
+import middle.IOrderProcessing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +30,7 @@ import java.util.Formatter;
   * @version 2.0
   */
  
-public class OrderX implements OrderProcessing
+public class OrderX implements IOrderProcessing
 {
   private static int theNextNumber = 1;          // Start at 1
   // Orders entered but waiting to be processed (picked)

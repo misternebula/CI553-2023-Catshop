@@ -5,8 +5,8 @@
 
 package middle;
 
-import dbAccess.StockR;
-import dbAccess.StockRW;
+import dbAccess.StockReader;
+import dbAccess.StockReaderWriter;
 import orders.Order;
 
 
@@ -19,8 +19,8 @@ import orders.Order;
 
 public class LocalMiddleFactory implements MiddleFactory
 {
-  private static StockR  aStockR  = null;
-  private static StockRW aStockRW = null;
+  private static StockReader aStockR  = null;
+  private static StockReaderWriter aStockRW = null;
   private static Order   aOrder   = null;
   
   /**
@@ -28,10 +28,10 @@ public class LocalMiddleFactory implements MiddleFactory
    * All users share this same object.
    */
   
-  public StockReader makeStockReader() throws StockException
+  public IStockReader makeStockReader() throws StockException
   {
     if ( aStockR == null )
-      aStockR = new StockR();
+      aStockR = new StockReader();
     return aStockR;
   }
 
@@ -40,10 +40,10 @@ public class LocalMiddleFactory implements MiddleFactory
    * All users share this same object.
    */
   
-  public StockReadWriter makeStockReadWriter() throws StockException
+  public IStockReaderWriter makeStockReadWriter() throws StockException
   {
     if ( aStockRW == null )
-      aStockRW = new StockRW();
+      aStockRW = new StockReaderWriter();
     return aStockRW;
   }
   
@@ -52,7 +52,7 @@ public class LocalMiddleFactory implements MiddleFactory
    * All users share this same object.
    */
    
-  public OrderProcessing makeOrderProcessing() throws OrderException
+  public IOrderProcessing makeOrderProcessing() throws OrderException
   {
     if ( aOrder == null )
       aOrder = new Order();

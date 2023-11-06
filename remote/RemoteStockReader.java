@@ -1,7 +1,7 @@
 package remote;
 
 import catalogue.Product;
-import dbAccess.StockR;
+import dbAccess.StockReader;
 import middle.StockException;
 
 import javax.swing.*;
@@ -17,17 +17,17 @@ import java.rmi.RemoteException;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class      R_StockR
+public class RemoteStockReader
        extends    java.rmi.server.UnicastRemoteObject
-       implements RemoteStockR_I
+       implements IRemoteStockReader
 {
   private static final long serialVersionUID = 1;
-  private StockR aStockR = null;
+  private StockReader aStockR = null;
 
-  public R_StockR( String url )
+  public RemoteStockReader(String url )
          throws RemoteException, StockException
   {
-    aStockR = new StockR();
+    aStockR = new StockReader();
   }
 
   /**

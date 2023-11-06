@@ -2,7 +2,7 @@ package clients.warehousePick;
 
 import catalogue.Basket;
 import middle.MiddleFactory;
-import middle.OrderProcessing;
+import middle.IOrderProcessing;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +27,7 @@ public class PickView implements Observer
   private final JScrollPane theSP      = new JScrollPane();
   private final JButton     theBtPicked= new JButton( PICKED );
  
-  private OrderProcessing theOrder     = null;
+  private IOrderProcessing theOrder     = null;
   
   private PickController cont= null;
 

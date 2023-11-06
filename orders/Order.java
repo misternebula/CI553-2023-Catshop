@@ -4,7 +4,7 @@ import catalogue.Basket;
 import catalogue.Product;
 import debug.DEBUG;
 import middle.OrderException;
-import middle.OrderProcessing;
+import middle.IOrderProcessing;
 
 import java.util.stream.Collectors;
 
@@ -22,7 +22,7 @@ import java.util.*;
  * @version 3.0
  */
  
-public class Order implements OrderProcessing
+public class Order implements IOrderProcessing
 {
   private enum State {Waiting, BeingPicked, ToBeCollected };
   /**

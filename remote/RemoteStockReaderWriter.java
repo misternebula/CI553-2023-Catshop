@@ -1,7 +1,7 @@
 package remote;
 
 import catalogue.Product;
-import dbAccess.StockRW;
+import dbAccess.StockReaderWriter;
 import middle.StockException;
 
 import javax.swing.*;
@@ -18,12 +18,12 @@ import java.rmi.RemoteException;
  * @version 2.1
  */
 
-public class      R_StockRW
+public class RemoteStockReaderWriter
        extends    java.rmi.server.UnicastRemoteObject
-       implements RemoteStockRW_I
+       implements IRemoteStockReaderWriter
 {
   private static final long serialVersionUID = 1;
-  private StockRW aStockRW = null;
+  private StockReaderWriter aStockRW = null;
 
   /**
    * All transactions are done via StockRW to ensure
@@ -32,10 +32,10 @@ public class      R_StockRW
    * @throws java.rmi.RemoteException if issue
    * @throws middle.StockException if issue
    */
-  public R_StockRW(String url)
+  public RemoteStockReaderWriter(String url)
          throws RemoteException, StockException
   {
-    aStockRW = new StockRW();
+    aStockRW = new StockReaderWriter();
   }
   
   /**

@@ -8,7 +8,7 @@ import catalogue.Product;
   * @version 2.0
   */
  
-public interface StockReadWriter extends StockReader
+public interface IStockReaderWriter extends IStockReader
 {
  /**
    * Customer buys stock,

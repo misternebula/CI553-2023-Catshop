@@ -1,8 +1,8 @@
 package middle;
 
-import remote.R_Order;
-import remote.R_StockR;
-import remote.R_StockRW;
+import remote.RemoteOrder;
+import remote.RemoteStockReader;
+import remote.RemoteStockReaderWriter;
 
 import java.net.InetAddress;
 import java.rmi.Naming;
@@ -37,9 +37,9 @@ class Server
   private void bind( String urlStockR, String urlStockRW,
                      String urlOrder )
   {
-    R_StockR   theStockR;               // Remote stock object
-    R_StockRW  theStockRW;              // Remote stock object
-    R_Order    theOrder;                // Remote order object
+    RemoteStockReader theStockR;               // Remote stock object
+    RemoteStockReaderWriter theStockRW;              // Remote stock object
+    RemoteOrder theOrder;                // Remote order object
     System.out.println( "Server: " );   // Introduction
     try
     {
@@ -54,17 +54,17 @@ class Server
 
     try
     {
-      theStockR = new R_StockR(urlStockR);            // Stock R
+      theStockR = new RemoteStockReader(urlStockR);            // Stock R
       Naming.rebind( urlStockR, theStockR );          //  bind to url
       System.out.println( "StockR  bound to: " +      //  Inform world
                            urlStockR );               //
 
-      theStockRW = new R_StockRW(urlStockRW);         // Stock RW
+      theStockRW = new RemoteStockReaderWriter(urlStockRW);         // Stock RW
       Naming.rebind( urlStockRW, theStockRW );        //  bind to url
       System.out.println( "StockRW bound to: " +      //  Inform world
                            urlStockRW );              // 
 
-      theOrder = new R_Order(urlOrder);               // Order
+      theOrder = new RemoteOrder(urlOrder);               // Order
       Naming.rebind( urlOrder, theOrder );            //  bind to url
       System.out.println( "Order   bound to: " +      //  Inform world
                          urlOrder ); 

@@ -1,7 +1,7 @@
 package clients.backDoor;
 
 import middle.MiddleFactory;
-import middle.StockReadWriter;
+import middle.IStockReaderWriter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +32,7 @@ public class BackDoorView implements Observer
   private final JButton     theBtRStock = new JButton( RESTOCK );
   private final JButton     theBtQuery = new JButton( QUERY );
   
-  private StockReadWriter theStock     = null;
+  private IStockReaderWriter theStock     = null;
   private BackDoorController cont= null;
 
   /**
