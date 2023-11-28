@@ -1,15 +1,14 @@
 package clients.customer;
 
+import clients.ControllerBase;
+
 /**
  * The Customer Controller
  * @author M A Smith (c) June 2014
  */
 
-public class CustomerController
+public class CustomerController extends ControllerBase<CustomerModel, CustomerView>
 {
-  private CustomerModel model = null;
-  private CustomerView  view  = null;
-
   /**
    * Constructor
    * @param model The model 
@@ -17,8 +16,7 @@ public class CustomerController
    */
   public CustomerController( CustomerModel model, CustomerView view )
   {
-    this.view  = view;
-    this.model = model;
+    super(model, view);
   }
 
   /**
