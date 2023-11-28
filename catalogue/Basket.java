@@ -1,10 +1,7 @@
 package catalogue;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Currency;
-import java.util.Formatter;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * A collection of products from the CatShop.
@@ -50,15 +47,24 @@ public class Basket extends ArrayList<Product> implements Serializable
   /**
    * Add a product to the Basket.
    * Product is appended to the end of the existing products
-   * in the basket.
+   * in the basket. If the product is already in the basket,
+   * the quantity is incremented.
    * @param pr A product to be added to the basket
    * @return true if successfully adds the product
    */
-  // Will be in the Java doc for Basket
   @Override
   public boolean add( Product pr )
-  {                              
-    return super.add( pr );     // Call add in ArrayList
+  {
+    var existing = super.stream().filter(x -> Objects.equals(x.getProductNum(), pr.getProductNum())).findFirst().orElse(null);
+
+    if (existing != null)
+    {
+      existing.setQuantity(existing.getQuantity() + 1);
+      return true;
+    }
+    else{
+      return super.add( pr );
+    }
   }
 
   /**
