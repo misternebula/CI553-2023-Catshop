@@ -1,5 +1,6 @@
 package clients.collection;
 
+import clients.ModelBase;
 import debug.DEBUG;
 import middle.MiddleFactory;
 import middle.IOrderProcessing;
@@ -12,7 +13,7 @@ import java.util.Observable;
  * @version 1.0
  */
 
-public class CollectModel extends Observable
+public class CollectModel extends ModelBase
 {
   private String      theAction   = "";
   private String      theOutput   = "";
@@ -24,6 +25,8 @@ public class CollectModel extends Observable
    */
   public CollectModel(MiddleFactory mf)
   {
+    super(mf);
+
     try                                           // 
     {      
       theOrder = mf.makeOrderProcessing();        // Process order
