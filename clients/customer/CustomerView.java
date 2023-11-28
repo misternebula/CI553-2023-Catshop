@@ -1,6 +1,7 @@
 package clients.customer;
 
 import clients.Picture;
+import clients.ViewBase;
 import middle.MiddleFactory;
 import middle.IStockReader;
 
@@ -15,24 +16,17 @@ import java.util.Observer;
  * @version 1.0
  */
 
-public class CustomerView implements Observer
+public class CustomerView extends ViewBase
 {
   class Name                              // Names of buttons
   {
     public static final String CHECK  = "Search";
   }
 
-  private static final int H = 300;       // Height of window pixels
-  private static final int W = 400;       // Width  of window pixels
 
-  private final JLabel      theAction  = new JLabel();
-  private final JTextField  theInput   = new JTextField();
-  private final JTextArea   theOutput  = new JTextArea();
-  private final JScrollPane theSP      = new JScrollPane();
   private final JButton     theBtCheck = new JButton( Name.CHECK );
 
   private Picture thePicture = new Picture(80,80);
-  private IStockReader theStock   = null;
   private CustomerController cont= null;
 
   /**
@@ -45,47 +39,24 @@ public class CustomerView implements Observer
   
   public CustomerView( RootPaneContainer rpc, MiddleFactory mf, int x, int y )
   {
-    try                                             // 
-    {      
-      theStock  = mf.makeStockReader();             // Database Access
-    } catch ( Exception e )
-    {
-      System.out.println("Exception: " + e.getMessage() );
-    }
-    Container cp         = rpc.getContentPane();    // Content Pane
-    Container rootWindow = (Container) rpc;         // Root Window
-    cp.setLayout(null);                             // No layout manager
-    rootWindow.setSize( W, H );                     // Size of Window
-    rootWindow.setLocation( x, y );
+    super(rpc, mf, x, y);
 
-    Font f = new Font("Monospaced",Font.PLAIN,12);  // Font f is
+    Container cp         = rpc.getContentPane();    // Content Pane
+
+
 
     theBtCheck.setBounds( 16, 25+60*0, 80, 40 );    // Check button
     theBtCheck.addActionListener(                   // Call back code
       e -> cont.doCheck( theInput.getText() ) );
     cp.add( theBtCheck );                           //  Add to canvas
 
-    theAction.setBounds( 110, 25 , 270, 20 );       // Message area
-    theAction.setText( "" );                        //  Blank
-    cp.add( theAction );                            //  Add to canvas
 
-    theInput.setBounds( 110, 50, 270, 40 );         // Product no area
-    theInput.setText("");                           // Blank
-    cp.add( theInput );                             //  Add to canvas
     
-    theSP.setBounds( 110, 100, 270, 160 );          // Scrolling pane
-    theOutput.setText( "" );                        //  Blank
-    theOutput.setFont( f );                         //  Uses font
-    theOutput.setEditable(false);
-    cp.add( theSP );                                //  Add to canvas
-    theSP.getViewport().add( theOutput );           //  In TextArea
+
 
     thePicture.setBounds( 16, 25+60*2, 80, 80 );   // Picture area
     cp.add( thePicture );                           //  Add to canvas
     thePicture.clear();
-    
-    rootWindow.setVisible( true );                  // Make visible);
-    theInput.requestFocus();                        // Focus is here
   }
 
    /**
@@ -106,9 +77,9 @@ public class CustomerView implements Observer
    
   public void update( Observable modelC, Object arg )
   {
+    super.update(modelC, arg);
+
     CustomerModel model  = (CustomerModel) modelC;
-    String        message = (String) arg;
-    theAction.setText( message );
     ImageIcon image = model.getPicture();  // Image of product
     if ( image == null )
     {
@@ -116,10 +87,6 @@ public class CustomerView implements Observer
     } else {
       thePicture.set( image );             // Display picture
     }
-    //theOutput.setText( model.getBasket().getDetails() );
-    theOutput.setText(model.getDisplayText());
-
-    theInput.requestFocus();               // Focus is here
   }
 
 }

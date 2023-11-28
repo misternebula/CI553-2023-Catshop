@@ -19,7 +19,7 @@ import java.util.Observable;
  */
 public class CustomerModel extends ModelBase
 {
-	private String displayText = "";
+
 	private ImageIcon thePic = null;
 
 	/*
@@ -75,8 +75,6 @@ public class CustomerModel extends ModelBase
 	{
 		return thePic;
 	}
-
-	public String getDisplayText() { return displayText; }
 
 	/**
 	 * ask for update of view callled at start

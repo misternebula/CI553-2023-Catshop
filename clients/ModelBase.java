@@ -10,6 +10,7 @@ import java.util.Observable;
 
 public class ModelBase extends Observable {
 
+    protected String displayText = "";
     protected IStockReaderWriter theStock = null;
 
     public ModelBase(MiddleFactory mf)
@@ -21,6 +22,8 @@ public class ModelBase extends Observable {
             DEBUG.error("ModelBase.ctor\n%s", e.getMessage() );
         }
     }
+
+    public String getDisplayText() { return displayText; }
 
     /**
      * Gets whether the given product is in stock.
