@@ -66,7 +66,8 @@ public class PickView implements Observer
 
     theSP.setBounds( 110, 55, 270, 205 );           // Scrolling pane
     theOutput.setText( "" );                        //  Blank
-    theOutput.setFont( f );                         //  Uses font  
+    theOutput.setFont( f );                         //  Uses font
+    theOutput.setEditable(false);
     cp.add( theSP );                                //  Add to canvas
     theSP.getViewport().add( theOutput );           //  In TextArea
     rootWindow.setVisible( true );                  // Make visible

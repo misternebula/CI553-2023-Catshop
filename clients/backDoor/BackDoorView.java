@@ -90,7 +90,8 @@ public class BackDoorView implements Observer
 
     theSP.setBounds( 110, 100, 270, 160 );          // Scrolling pane
     theOutput.setText( "" );                        //  Blank
-    theOutput.setFont( f );                         //  Uses font  
+    theOutput.setFont( f );                         //  Uses font
+    theOutput.setEditable(false);
     cp.add( theSP );                                //  Add to canvas
     theSP.getViewport().add( theOutput );           //  In TextArea
     rootWindow.setVisible( true );                  // Make visible
