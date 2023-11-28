@@ -5,8 +5,6 @@ import debug.DEBUG;
 import middle.MiddleFactory;
 import middle.IOrderProcessing;
 
-import java.util.Observable;
-
 /**
  * Implements the Model of the collection client
  * @author  Mike Smith University of Brighton
@@ -82,7 +80,7 @@ public class CollectModel extends ModelBase
    * The output to be displayed
    * @return The string to be displayed
    */
-  public String getResponce()
+  public String getResponse()
   {
     return theOutput;
   }

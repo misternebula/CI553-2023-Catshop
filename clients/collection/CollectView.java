@@ -7,7 +7,6 @@ import middle.IOrderProcessing;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Implements the Customer view.
@@ -68,6 +67,6 @@ public class CollectView extends ViewBase
 
     CollectModel model  = (CollectModel) modelC;
     
-    theOutput.setText( model.getResponce() );
+    theOutput.setText( model.getResponse() );
   }
 }
