@@ -19,8 +19,7 @@ public class CustomerView implements Observer
 {
   class Name                              // Names of buttons
   {
-    public static final String CHECK  = "Check";
-    public static final String CLEAR  = "Clear";
+    public static final String CHECK  = "Search";
   }
 
   private static final int H = 300;       // Height of window pixels
@@ -31,7 +30,6 @@ public class CustomerView implements Observer
   private final JTextArea   theOutput  = new JTextArea();
   private final JScrollPane theSP      = new JScrollPane();
   private final JButton     theBtCheck = new JButton( Name.CHECK );
-  private final JButton     theBtClear = new JButton( Name.CLEAR );
 
   private Picture thePicture = new Picture(80,80);
   private IStockReader theStock   = null;
@@ -66,11 +64,6 @@ public class CustomerView implements Observer
     theBtCheck.addActionListener(                   // Call back code
       e -> cont.doCheck( theInput.getText() ) );
     cp.add( theBtCheck );                           //  Add to canvas
-
-    theBtClear.setBounds( 16, 25+60*1, 80, 40 );    // Clear button
-    theBtClear.addActionListener(                   // Call back code
-      e -> cont.doClear() );
-    cp.add( theBtClear );                           //  Add to canvas
 
     theAction.setBounds( 110, 25 , 270, 20 );       // Message area
     theAction.setText( "" );                        //  Blank
@@ -122,7 +115,9 @@ public class CustomerView implements Observer
     } else {
       thePicture.set( image );             // Display picture
     }
-    theOutput.setText( model.getBasket().getDetails() );
+    //theOutput.setText( model.getBasket().getDetails() );
+    theOutput.setText(model.getDisplayText());
+
     theInput.requestFocus();               // Focus is here
   }
 
