@@ -1,5 +1,10 @@
 package clients.customer;
 
+import clients.ClientBase;
+import clients.backDoor.BackDoorClient;
+import clients.backDoor.BackDoorController;
+import clients.backDoor.BackDoorModel;
+import clients.backDoor.BackDoorView;
 import clients.customer.CustomerController;
 import clients.customer.CustomerModel;
 import clients.customer.CustomerView;
@@ -14,31 +19,31 @@ import javax.swing.*;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class CustomerClient
+public class CustomerClient extends ClientBase<CustomerModel, CustomerView, CustomerController>
 {
   public static void main (String args[])
   {
     String stockURL = args.length < 1         // URL of stock R
                     ? Names.STOCK_R           //  default  location
                     : args[0];                //  supplied location
-    
-    RemoteMiddleFactory mrf = new RemoteMiddleFactory();
-    mrf.setStockRInfo( stockURL );
-    displayGUI(mrf);                          // Create GUI
-  }
-   
-  private static void displayGUI(MiddleFactory mf)
-  {
-    JFrame  window = new JFrame();     
-    window.setTitle( "Customer Client (MVC RMI)" );
-    window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-    
-    CustomerModel model = new CustomerModel(mf);
-    CustomerView  view  = new CustomerView( window, mf, 0, 0 );
-    CustomerController cont  = new CustomerController( model, view );
-    view.setController( cont );
 
-    model.addObserver( view );       // Add observer to the model
-    window.setVisible(true);         // Display Scree
+    var instance = new CustomerClient();
+    var mrf = instance.createFactory(stockURL, null);
+    instance.displayGUI(mrf, "Customer Client (MVC RMI)");
+  }
+
+  @Override
+  protected CustomerModel getModel(MiddleFactory mf) {
+    return new CustomerModel(mf);
+  }
+
+  @Override
+  protected CustomerView getView(JFrame window, MiddleFactory mf) {
+    return new CustomerView( window, mf, 0, 0 );
+  }
+
+  @Override
+  protected CustomerController getCont(CustomerModel model, CustomerView view) {
+    return new CustomerController(model, view);
   }
 }

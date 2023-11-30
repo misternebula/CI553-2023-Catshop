@@ -16,7 +16,7 @@ import java.util.Observer;
  * @version 1.0
  */
 
-public class CustomerView extends ViewBase
+public class CustomerView extends ViewBase<CustomerController>
 {
   class Name                              // Names of buttons
   {
@@ -27,7 +27,6 @@ public class CustomerView extends ViewBase
   private final JButton     theBtCheck = new JButton( Name.CHECK );
 
   private Picture thePicture = new Picture(80,80);
-  private CustomerController cont= null;
 
   /**
    * Construct the view
@@ -43,30 +42,14 @@ public class CustomerView extends ViewBase
 
     Container cp         = rpc.getContentPane();    // Content Pane
 
-
-
     theBtCheck.setBounds( 16, 25+60*0, 80, 40 );    // Check button
     theBtCheck.addActionListener(                   // Call back code
       e -> cont.doCheck( theInput.getText() ) );
     cp.add( theBtCheck );                           //  Add to canvas
 
-
-    
-
-
     thePicture.setBounds( 16, 25+60*2, 80, 80 );   // Picture area
     cp.add( thePicture );                           //  Add to canvas
     thePicture.clear();
-  }
-
-   /**
-   * The controller object, used so that an interaction can be passed to the controller
-   * @param c   The controller
-   */
-
-  public void setController( CustomerController c )
-  {
-    cont = c;
   }
 
   /**

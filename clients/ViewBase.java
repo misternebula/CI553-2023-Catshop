@@ -1,5 +1,6 @@
 package clients;
 
+import clients.backDoor.BackDoorController;
 import clients.customer.CustomerController;
 import clients.customer.CustomerModel;
 import middle.IStockReader;
@@ -10,7 +11,7 @@ import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
 
-public class ViewBase implements Observer {
+public class ViewBase<O extends ControllerBase> implements Observer {
     protected static final int H = 300;       // Height of window pixels
     protected static final int W = 400;       // Width  of window pixels
 
@@ -20,6 +21,7 @@ public class ViewBase implements Observer {
     private final JScrollPane theSP      = new JScrollPane();
 
     protected IStockReader theStock   = null;
+    protected O cont = null;
 
     public ViewBase(RootPaneContainer rpc, MiddleFactory mf, int x, int y )
     {
@@ -55,6 +57,11 @@ public class ViewBase implements Observer {
 
         rootWindow.setVisible( true );                  // Make visible);
         theInput.requestFocus();                        // Focus is here
+    }
+
+    public void setController( O c )
+    {
+        cont = c;
     }
 
     public void update(Observable modelC, Object arg )
