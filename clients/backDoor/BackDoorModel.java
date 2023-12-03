@@ -2,7 +2,6 @@ package clients.backDoor;
 
 import catalogue.Basket;
 import catalogue.Product;
-import clients.ModelBase;
 import debug.DEBUG;
 import middle.MiddleFactory;
 import middle.StockException;
@@ -15,10 +14,12 @@ import java.util.Observable;
  * @author  Mike Smith University of Brighton
  * @version 1.0
  */
-public class BackDoorModel extends ModelBase
+public class BackDoorModel extends Observable
 {
   private Basket      theBasket  = null;            // Bought items
   private String      pn = "";                      // Product being processed
+
+  private IStockReaderWriter theStock     = null;
 
   /*
    * Construct the model of the back door client
@@ -27,7 +28,14 @@ public class BackDoorModel extends ModelBase
 
   public BackDoorModel(MiddleFactory mf)
   {
-    super(mf);
+    try                                           // 
+    {      
+      theStock = mf.makeStockReadWriter();        // Database access
+    } catch ( Exception e )
+    {
+      DEBUG.error("CustomerModel.constructor\n%s", e.getMessage() );
+    }
+
     theBasket = makeBasket();                     // Initial Basket
   }
   

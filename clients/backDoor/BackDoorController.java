@@ -1,20 +1,24 @@
 package clients.backDoor;
 
 
-import clients.ControllerBase;
-import clients.customer.CustomerModel;
-import clients.customer.CustomerView;
-
 /**
  * The BackDoor Controller
  * @author M A Smith (c) June 2014
  */
 
-public class BackDoorController extends ControllerBase<BackDoorModel, BackDoorView>
+public class BackDoorController
 {
-  public BackDoorController(BackDoorModel model, BackDoorView view )
+  private BackDoorModel model = null;
+  private BackDoorView  view  = null;
+  /**
+   * Constructor
+   * @param model The model 
+   * @param view  The view from which the interaction came
+   */
+  public BackDoorController( BackDoorModel model, BackDoorView view )
   {
-    super(model, view);
+    this.view  = view;
+    this.model = model;
   }
 
   /**
@@ -43,5 +47,7 @@ public class BackDoorController extends ControllerBase<BackDoorModel, BackDoorVi
   {
     model.doClear();
   }
+
+  
 }
 
