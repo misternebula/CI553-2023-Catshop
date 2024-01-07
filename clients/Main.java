@@ -52,15 +52,23 @@ class Main
     startCustomerGUI_MVC( mlf );
     if ( many ) 
      startCustomerGUI_MVC( mlf );
+
     startCashierGUI_MVC( mlf );
-    startCashierGUI_MVC( mlf );
+    if ( many )
+      startCashierGUI_MVC( mlf );
+
     startBackDoorGUI_MVC( mlf );
+    if ( many )
+      startBackDoorGUI_MVC( mlf );
+
+    startPickGUI_MVC( mlf );
     if ( many ) 
       startPickGUI_MVC( mlf );
-    startPickGUI_MVC( mlf );
+
     startDisplayGUI_MVC( mlf );
     if ( many ) 
       startDisplayGUI_MVC( mlf );
+
     startCollectionGUI_MVC( mlf );
   }
   

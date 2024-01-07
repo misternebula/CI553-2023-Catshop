@@ -22,8 +22,8 @@ public class DisplayView extends Canvas implements Observer
 {
   private static final long serialVersionUID = 1L;
   private Font font = new Font("Monospaced",Font.BOLD,24);
-  private int H = 300;         // Height of window 
-  private int W = 400;         // Width  of window 
+  private int H = 400;         // Height of window
+  private int W = 600;         // Width  of window
   private String textToDisplay = "";
   private DisplayController cont= null;
   

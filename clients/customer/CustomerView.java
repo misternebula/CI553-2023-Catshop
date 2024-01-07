@@ -19,8 +19,8 @@ import java.util.Observer;
 
 public class CustomerView implements Observer
 {
-  private static final int H = 300;       // Height of window pixels
-  private static final int W = 400;       // Width  of window pixels
+  private static final int H = 400;       // Height of window pixels
+  private static final int W = 600;       // Width  of window pixels
 
   private final JTextField  searchBar   = new JTextField();
   private JScrollPane scrollPane;
