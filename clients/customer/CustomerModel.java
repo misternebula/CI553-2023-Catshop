@@ -9,6 +9,7 @@ import middle.StockException;
 import middle.IStockReader;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Observable;
 
 /**
@@ -43,7 +44,7 @@ public class CustomerModel extends Observable
     }
     theBasket = makeBasket();                    // Initial Basket
   }
-  
+
   /**
    * return the Basket of products
    * @return the basket of products
@@ -55,56 +56,28 @@ public class CustomerModel extends Observable
 
   /**
    * Check if the product is in Stock
-   * @param productNum The product number
+   * @param search The search input
    */
-  public void doCheck(String productNum )
+  public void doCheck(String search )
   {
-    theBasket.clear();                          // Clear s. list
-    String theAction = "";
-    pn  = productNum.trim();                    // Product no.
-    int    amount  = 1;                         //  & quantity
-    try
-    {
-      if ( theStock.exists( pn ) )              // Stock Exists?
-      {                                         // T
-        Product pr = theStock.getDetails( pn ); //  Product
-        if ( pr.getQuantity() >= amount )       //  In stock?
-        { 
-          theAction =                           //   Display 
-            String.format( "%s : %7.2f (%2d) ", //
-              pr.getDescription(),              //    description
-              pr.getPrice(),                    //    price
-              pr.getQuantity() );               //    quantity
-          pr.setQuantity( amount );             //   Require 1
-          theBasket.add( pr );                  //   Add to basket
-          thePic = theStock.getImage( pn );     //    product
-        } else {                                //  F
-          theAction =                           //   Inform
-            pr.getDescription() +               //    product not
-            " not in stock" ;                   //    in stock
-        }
-      } else {                                  // F
-        theAction =                             //  Inform Unknown
-          "Unknown product number " + pn;       //  product number
-      }
-    } catch( StockException e )
-    {
-      DEBUG.error("CustomerClient.doCheck()\n%s",
-      e.getMessage() );
-    }
-    setChanged(); notifyObservers(theAction);
-  }
+    try {
+      var products = theStock.getProducts();
 
-  /**
-   * Clear the products from the basket
-   */
-  public void doClear()
-  {
-    String theAction = "";
-    theBasket.clear();                        // Clear s. list
-    theAction = "Enter Product Number";       // Set display
-    thePic = null;                            // No picture
-    setChanged(); notifyObservers(theAction);
+      var returnProducts = new ArrayList<Product>();
+
+      for (var product : products)
+      {
+        if (product.getDescription().toLowerCase().contains(search.toLowerCase()))
+        {
+          returnProducts.add(product);
+        }
+      }
+
+      setChanged();
+      notifyObservers(returnProducts);
+    } catch (StockException e) {
+      throw new RuntimeException(e);
+    }
   }
   
   /**

@@ -1,11 +1,13 @@
 package clients.customer;
 
+import catalogue.Product;
 import clients.Picture;
 import middle.MiddleFactory;
 import middle.IStockReader;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -17,25 +19,18 @@ import java.util.Observer;
 
 public class CustomerView implements Observer
 {
-  class Name                              // Names of buttons
-  {
-    public static final String CHECK  = "Check";
-    public static final String CLEAR  = "Clear";
-  }
-
   private static final int H = 300;       // Height of window pixels
   private static final int W = 400;       // Width  of window pixels
 
-  private final JLabel      theAction  = new JLabel();
-  private final JTextField  theInput   = new JTextField();
-  private final JTextArea   theOutput  = new JTextArea();
-  private final JScrollPane theSP      = new JScrollPane();
-  private final JButton     theBtCheck = new JButton( Name.CHECK );
-  private final JButton     theBtClear = new JButton( Name.CLEAR );
+  private final JTextField  searchBar   = new JTextField();
+  private JScrollPane scrollPane;
+  private JPanel scrollPanePanel;
+  private final JButton     searchButton = new JButton("Search");
 
-  private Picture thePicture = new Picture(80,80);
   private IStockReader theStock   = null;
   private CustomerController cont= null;
+
+  private Container cp;
 
   /**
    * Construct the view
@@ -54,7 +49,8 @@ public class CustomerView implements Observer
     {
       System.out.println("Exception: " + e.getMessage() );
     }
-    Container cp         = rpc.getContentPane();    // Content Pane
+
+    cp         = rpc.getContentPane();    // Content Pane
     Container rootWindow = (Container) rpc;         // Root Window
     cp.setLayout(null);                             // No layout manager
     rootWindow.setSize( W, H );                     // Size of Window
@@ -62,36 +58,24 @@ public class CustomerView implements Observer
 
     Font f = new Font("Monospaced",Font.PLAIN,12);  // Font f is
 
-    theBtCheck.setBounds( 16, 25+60*0, 80, 40 );    // Check button
-    theBtCheck.addActionListener(                   // Call back code
-      e -> cont.doCheck( theInput.getText() ) );
-    cp.add( theBtCheck );                           //  Add to canvas
+    searchBar.setBounds( 150, 10, 150, 25 );
+    searchBar.setText("");
+    cp.add( searchBar );
 
-    theBtClear.setBounds( 16, 25+60*1, 80, 40 );    // Clear button
-    theBtClear.addActionListener(                   // Call back code
-      e -> cont.doClear() );
-    cp.add( theBtClear );                           //  Add to canvas
+    searchButton.setBounds( 300, 10, 80, 24 );
+    searchButton.addActionListener(e -> cont.doCheck( searchBar.getText() ) );
+    cp.add( searchButton );
 
-    theAction.setBounds( 110, 25 , 270, 20 );       // Message area
-    theAction.setText( "" );                        //  Blank
-    cp.add( theAction );                            //  Add to canvas
 
-    theInput.setBounds( 110, 50, 270, 40 );         // Product no area
-    theInput.setText("");                           // Blank
-    cp.add( theInput );                             //  Add to canvas
-    
-    theSP.setBounds( 110, 100, 270, 160 );          // Scrolling pane
-    theOutput.setText( "" );                        //  Blank
-    theOutput.setFont( f );                         //  Uses font  
-    cp.add( theSP );                                //  Add to canvas
-    theSP.getViewport().add( theOutput );           //  In TextArea
+    scrollPanePanel = new JPanel();
+    scrollPanePanel.setLayout(new GridLayout(0, 3));
 
-    thePicture.setBounds( 16, 25+60*2, 80, 80 );   // Picture area
-    cp.add( thePicture );                           //  Add to canvas
-    thePicture.clear();
+    scrollPane = new JScrollPane(scrollPanePanel);
+    scrollPane.setBounds( 150, 35, 230, 220 );
+    cp.add( scrollPane );
     
     rootWindow.setVisible( true );                  // Make visible);
-    theInput.requestFocus();                        // Focus is here
+    searchBar.requestFocus();                        // Focus is here
   }
 
    /**
@@ -109,21 +93,36 @@ public class CustomerView implements Observer
    * @param modelC   The observed model
    * @param arg      Specific args 
    */
-   
   public void update( Observable modelC, Object arg )
   {
-    CustomerModel model  = (CustomerModel) modelC;
-    String        message = (String) arg;
-    theAction.setText( message );
-    ImageIcon image = model.getPicture();  // Image of product
-    if ( image == null )
-    {
-      thePicture.clear();                  // Clear picture
-    } else {
-      thePicture.set( image );             // Display picture
-    }
-    theOutput.setText( model.getBasket().getDetails() );
-    theInput.requestFocus();               // Focus is here
-  }
+    CustomerModel model = (CustomerModel) modelC;
+    ArrayList<Product> searchResults = (ArrayList<Product>)arg;
 
+    scrollPanePanel = new JPanel();
+    scrollPanePanel.setLayout(new GridBagLayout());
+
+    int row = 0;
+    for (var product : searchResults) {
+      var bagConstraints = new GridBagConstraints();
+      bagConstraints.gridwidth = 1;
+      bagConstraints.gridy = row;
+      bagConstraints.ipadx = 5;
+      bagConstraints.ipady = 2;
+
+      var desc = new JLabel(product.getDescription());
+      var price = new JLabel(String.valueOf(product.getPrice()));
+      var stock = new JLabel(String.valueOf(product.getQuantity()));
+      var addButton = new JButton("Add");
+
+      scrollPanePanel.add(desc, bagConstraints);
+      scrollPanePanel.add(price, bagConstraints);
+      scrollPanePanel.add(stock, bagConstraints);
+      scrollPanePanel.add(addButton, bagConstraints);
+      row++;
+    }
+
+    scrollPane.setViewportView(scrollPanePanel);
+
+    searchBar.requestFocus();
+  }
 }
