@@ -1,5 +1,7 @@
 package clients.customer;
 
+import catalogue.Product;
+
 /**
  * The Customer Controller
  * @author M A Smith (c) June 2014
@@ -29,5 +31,10 @@ public class CustomerController
   {
     model.doCheck(search);
   }
+
+  public void addToBasket(Product product) { model.addToBasket(product); }
+
+  public void incrementProduct(Product product) { model.incrementProduct(product); }
+  public void decrementProduct(Product product) { model.decrementProduct(product); }
 }
 
