@@ -1,5 +1,6 @@
 package clients.customer;
 
+import catalogue.Basket;
 import catalogue.Product;
 
 /**
@@ -36,5 +37,9 @@ public class CustomerController
 
   public void incrementProduct(Product product) { model.incrementProduct(product); }
   public void decrementProduct(Product product) { model.decrementProduct(product); }
+
+  public Basket getBasket() { return model.getBasket(); }
+
+  public void makeNewBasket() { model.makeBasket(); }
 }
 

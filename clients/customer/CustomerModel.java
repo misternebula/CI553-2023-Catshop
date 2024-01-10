@@ -32,12 +32,13 @@ public class CustomerModel extends Observable
     try                                          // 
     {  
       theStock = mf.makeStockReadWriter();           // Database access
+      theOrder = mf.makeOrderProcessing();
     } catch ( Exception e )
     {
       DEBUG.error("CustomerModel.constructor\n" +
                   "Database not created?\n%s\n", e.getMessage() );
     }
-    theBasket = makeBasket();                    // Initial Basket
+    makeBasket();                    // Initial Basket
   }
 
   /**
@@ -129,9 +130,21 @@ public class CustomerModel extends Observable
    * Make a new Basket
    * @return an instance of a new Basket
    */
-  protected Basket makeBasket()
+  protected void makeBasket()
   {
-    return new Basket();
+    try {
+      int uon = theOrder.uniqueNumber();
+      theBasket = new Basket();
+      theBasket.setOrderNum( uon );
+    } catch (OrderException e) {
+      throw new RuntimeException(e);
+    }
+
+    if (searchString != null)
+    {
+      // refresh view
+      doCheck(searchString);
+    }
   }
 }
 
