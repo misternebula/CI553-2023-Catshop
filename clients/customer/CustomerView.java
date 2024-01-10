@@ -7,6 +7,7 @@ import middle.IStockReader;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class CustomerView implements Observer
   private final JScrollPane searchScrollPane;
   private final JScrollPane basketScrollPane;
   private final JLabel totalLabel;
+
+  private JFrame popupWindow;
 
   private CustomerController cont = null;
 
@@ -81,10 +84,44 @@ public class CustomerView implements Observer
 
     JButton finishButton = new JButton("Finish");
     finishButton.setBounds(10, 310, 229, 34);
+    finishButton.addActionListener(actionEvent -> {
+      openPopupWindow("Your order number is " + cont.getBasket().getOrderNum() + ".", rootWindow, action -> {
+        cont.makeNewBasket();
+      });
+    });
     cp.add(finishButton);
     
     rootWindow.setVisible( true );                  // Make visible);
     searchBar.requestFocus();                        // Focus is here
+  }
+
+  private void openPopupWindow(String text, Container rootWindow, ActionListener onPressOk)
+  {
+    popupWindow = new JFrame();
+    popupWindow.setResizable(false);
+
+    Container pane = popupWindow.getContentPane();    // Content Pane
+    Container root = (Container) popupWindow;         // Root Window
+    pane.setLayout(null);                             // No layout manager
+    var popupWidth = 300;
+    var popupHeight = 200;
+    root.setSize( popupWidth, popupHeight );
+    var midpointOfBaseX = rootWindow.getX() + (W / 2);
+    var midpointOfBaseY = rootWindow.getY() + (H / 2);
+    root.setLocation(midpointOfBaseX - (popupWidth / 2), midpointOfBaseY - (popupHeight / 2));
+
+    var label = new JLabel(text);
+    label.setBounds(0, 0, popupWidth, popupHeight / 2);
+    label.setHorizontalAlignment(JLabel.CENTER);
+    pane.add(label);
+
+    var button = new JButton("OK");
+    button.setBounds(50, popupHeight - 70, popupWidth - 16 - 100, 30);
+    button.addActionListener(onPressOk);
+    button.addActionListener(action -> popupWindow.setVisible(false));
+    pane.add(button);
+
+    popupWindow.setVisible(true);
   }
 
    /**
