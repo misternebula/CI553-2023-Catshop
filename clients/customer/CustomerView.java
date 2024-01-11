@@ -179,6 +179,7 @@ public class CustomerView implements Observer
       stock.setHorizontalAlignment(JLabel.CENTER);
 
       var addButton = new JButton("Add");
+      addButton.setEnabled(product.getQuantity() > 0);
       addButton.addActionListener(x -> {
         cont.addToBasket(product);
       });
