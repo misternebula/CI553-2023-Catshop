@@ -92,9 +92,8 @@ public class CustomerView implements Observer
       }
 
       openPopupWindow("Please pay.", rootWindow, action -> {
-        openPopupWindow("Your order number is " + cont.getBasket().getOrderNum() + ".", rootWindow, a -> {
-          cont.paymentFinished();
-        });
+        var orderNumber = cont.paymentFinished();
+        openPopupWindow("Your order number is " + orderNumber + ".", rootWindow, null);
       });
     });
     cp.add(finishButton);

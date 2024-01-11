@@ -108,14 +108,29 @@ public class CustomerModel extends Observable
     doCheck(searchString);
   }
 
-  public void paymentFinished()
+  public int paymentFinished()
   {
+    if (theBasket.isEmpty())
+    {
+      // Should not happen if using CustomerView.
+      // This check is here just in case, to stop bad orders going through the system.
+      return 0;
+    }
+
     try {
+      for (var product : theBasket)
+      {
+        theStock.buyStock(product.getProductNum(), product.getQuantity());
+      }
+
+      theBasket.setOrderNum(theOrder.uniqueNumber());
+      var finishedOrderNum = theBasket.getOrderNum();
       theOrder.newOrder(theBasket);
-    } catch (OrderException e) {
+      makeBasket();
+      return finishedOrderNum;
+    } catch (OrderException | StockException e) {
       throw new RuntimeException(e);
     }
-    makeBasket();
   }
 
   /**
@@ -131,14 +146,7 @@ public class CustomerModel extends Observable
       throw new RuntimeException(e);
     }
   }
-  
-  /**
-   * ask for update of view callled at start
-   */
-  private void askForUpdate()
-  {
-    setChanged(); notifyObservers("START only"); // Notify
-  }
+
 
   /**
    * Make a new Basket
@@ -146,13 +154,7 @@ public class CustomerModel extends Observable
    */
   protected void makeBasket()
   {
-    try {
-      int uon = theOrder.uniqueNumber();
-      theBasket = new Basket();
-      theBasket.setOrderNum( uon );
-    } catch (OrderException e) {
-      throw new RuntimeException(e);
-    }
+    theBasket = new Basket();
 
     if (searchString != null)
     {
