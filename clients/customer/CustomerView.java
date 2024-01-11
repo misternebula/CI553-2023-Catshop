@@ -104,6 +104,7 @@ public class CustomerView implements Observer
 
     Container pane = popupWindow.getContentPane();
     Container root = popupWindow;
+    root.setLayout(null);
 
     var popupWidth = 300;
     var popupHeight = 200;
