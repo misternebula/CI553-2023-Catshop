@@ -93,7 +93,7 @@ public class CollectView implements Observer
     String        message = (String) arg;
     theAction.setText( message );
     
-    theOutput.setText( model.getResponce() );
+    theOutput.setText( model.getResponse() );
     theInput.requestFocus();               // Focus is here
   }
 
