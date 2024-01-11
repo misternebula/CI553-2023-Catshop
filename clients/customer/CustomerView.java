@@ -114,6 +114,8 @@ public class CustomerView implements Observer
     var popupWidth = 300;
     var popupHeight = 200;
     root.setSize( popupWidth, popupHeight );
+
+    // Center popup on given window
     var midpointOfBaseX = rootWindow.getX() + (W / 2);
     var midpointOfBaseY = rootWindow.getY() + (H / 2);
     root.setLocation(midpointOfBaseX - (popupWidth / 2), midpointOfBaseY - (popupHeight / 2));

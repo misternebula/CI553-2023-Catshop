@@ -68,6 +68,7 @@ public class CustomerModel extends Observable
 
       for (var product : products)
       {
+        // Include products that have a search word in their description, or are the product number given
         if (Arrays.stream(searchWords).anyMatch(product.getDescription().toLowerCase()::contains)
                 || product.getProductNum().equalsIgnoreCase(search))
         {

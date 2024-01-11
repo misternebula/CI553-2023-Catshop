@@ -55,6 +55,7 @@ public class DisplayView extends Canvas implements Observer
     waitingTextArea.setBounds(30, 40, 180, 300);
     waitingTextArea.setFont(font);
     waitingTextArea.setEditable(false);
+    waitingTextArea.setBorder(BorderFactory.createLineBorder(Color.black));
     cp.add(waitingTextArea);
 
     var beingPickedLabel = new JLabel("Being Picked");
@@ -67,6 +68,7 @@ public class DisplayView extends Canvas implements Observer
     beingPickedTextArea.setBounds(210, 40, 180, 300);
     beingPickedTextArea.setFont(font);
     beingPickedTextArea.setEditable(false);
+    beingPickedTextArea.setBorder(BorderFactory.createLineBorder(Color.black));
     cp.add(beingPickedTextArea);
 
     var readyLabel = new JLabel("Ready");
@@ -79,6 +81,7 @@ public class DisplayView extends Canvas implements Observer
     readyTextArea.setBounds(390, 40, 180, 300);
     readyTextArea.setFont(font);
     readyTextArea.setEditable(false);
+    readyTextArea.setBorder(BorderFactory.createLineBorder(Color.black));
     cp.add(readyTextArea);
     
     rootWindow.setVisible( true );                  // Make visible
