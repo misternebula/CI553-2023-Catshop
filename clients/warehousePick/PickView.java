@@ -19,8 +19,8 @@ public class PickView implements Observer
 {
   private static final String PICKED = "Picked";
 
-  private static final int H = 300;       // Height of window pixels
-  private static final int W = 400;       // Width  of window pixels
+  private static final int H = 400;       // Height of window pixels
+  private static final int W = 600;       // Width  of window pixels
 
   private final JLabel      theAction  = new JLabel();
   private final JTextArea   theOutput  = new JTextArea();

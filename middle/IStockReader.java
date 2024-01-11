@@ -3,6 +3,7 @@ package middle;
 import catalogue.Product;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 /**
   * Interface for read access to the stock list.
@@ -39,4 +40,10 @@ public interface IStockReader
    */
   
   ImageIcon getImage(String pNum) throws StockException;
+
+ /**
+  * Returns all products in the system.
+  * @return List of products
+  */
+ ArrayList<Product> getProducts() throws StockException;
 }

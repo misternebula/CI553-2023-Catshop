@@ -1,5 +1,8 @@
 package clients.customer;
 
+import catalogue.Basket;
+import catalogue.Product;
+
 /**
  * The Customer Controller
  * @author M A Smith (c) June 2014
@@ -23,11 +26,20 @@ public class CustomerController
 
   /**
    * Check interaction from view
-   * @param pn The product number to be checked
+   * @param search The text in the search bar
    */
-  public void doCheck( String pn )
+  public void doCheck( String search )
   {
-    model.doCheck(pn);
+    model.doCheck(search);
   }
+
+  public void addToBasket(Product product) { model.addToBasket(product); }
+
+  public void incrementProduct(Product product) { model.incrementProduct(product); }
+  public void decrementProduct(Product product) { model.decrementProduct(product); }
+
+  public Basket getBasket() { return model.getBasket(); }
+
+  public int paymentFinished() { return model.paymentFinished(); }
 }
 

@@ -1,12 +1,16 @@
 package clients.customer;
 
+import catalogue.Product;
 import clients.Picture;
-import clients.ViewBase;
 import middle.MiddleFactory;
 import middle.IStockReader;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -16,18 +20,19 @@ import java.util.Observer;
  * @version 1.0
  */
 
-public class CustomerView extends ViewBase
+public class CustomerView implements Observer
 {
-  class Name                              // Names of buttons
-  {
-    public static final String CHECK  = "Search";
-  }
+  private static final int H = 400;       // Height of window pixels
+  private static final int W = 600;       // Width  of window pixels
 
+  private final JTextField searchBar = new JTextField();
+  private final JScrollPane searchScrollPane;
+  private final JScrollPane basketScrollPane;
+  private final JLabel totalLabel;
 
-  private final JButton     theBtCheck = new JButton( Name.CHECK );
+  private JFrame popupWindow;
 
-  private Picture thePicture = new Picture(80,80);
-  private CustomerController cont= null;
+  private CustomerController cont = null;
 
   /**
    * Construct the view
@@ -39,24 +44,92 @@ public class CustomerView extends ViewBase
   
   public CustomerView( RootPaneContainer rpc, MiddleFactory mf, int x, int y )
   {
-    super(rpc, mf, x, y);
+    try                                             // 
+    {
+      IStockReader theStock = mf.makeStockReader();             // Database Access
+    } catch ( Exception e )
+    {
+      System.out.println("Exception: " + e.getMessage() );
+    }
 
-    Container cp         = rpc.getContentPane();    // Content Pane
+    Container cp = rpc.getContentPane();    // Content Pane
+    Container rootWindow = (Container) rpc;         // Root Window
+    cp.setLayout(null);                             // No layout manager
+    rootWindow.setSize( W, H );                     // Size of Window
+    rootWindow.setLocation( x, y );
 
+    Font f = new Font("Monospaced",Font.PLAIN,12);  // Font f is
 
+    searchBar.setBounds( 250, 10, 250, 25 );
+    searchBar.setText("");
+    cp.add( searchBar );
 
-    theBtCheck.setBounds( 16, 25+60*0, 80, 40 );    // Check button
-    theBtCheck.addActionListener(                   // Call back code
-      e -> cont.doCheck( theInput.getText() ) );
-    cp.add( theBtCheck );                           //  Add to canvas
+    JButton searchButton = new JButton("Search");
+    searchButton.setBounds( 490, 10, 79, 24 );
+    searchButton.addActionListener(e -> cont.doCheck( searchBar.getText() ) );
+    cp.add(searchButton);
 
+    searchScrollPane = new JScrollPane();
+    searchScrollPane.setBounds( 250, 35, 320, 310 );
+    cp.add(searchScrollPane);
 
+    basketScrollPane = new JScrollPane();
+    basketScrollPane.setBounds(10, 10, 230, 270);
+    cp.add(basketScrollPane);
+
+    totalLabel = new JLabel("0 Items - Total £0.00");
+    totalLabel.setBounds(10, 280, 230, 20);
+    totalLabel.setHorizontalAlignment(JLabel.CENTER);
+    cp.add(totalLabel);
+
+    JButton finishButton = new JButton("Finish");
+    finishButton.setBounds(10, 310, 229, 34);
+    finishButton.addActionListener(actionEvent -> {
+      if (cont.getBasket().isEmpty())
+      {
+        openPopupWindow("Please add items to your basket.", rootWindow, null);
+        return;
+      }
+
+      openPopupWindow("Please pay.", rootWindow, action -> {
+        var orderNumber = cont.paymentFinished();
+        openPopupWindow("Your order number is " + orderNumber + ".", rootWindow, null);
+      });
+    });
+    cp.add(finishButton);
     
+    rootWindow.setVisible( true );                  // Make visible);
+    searchBar.requestFocus();                        // Focus is here
+  }
 
+  private void openPopupWindow(String text, Container rootWindow, ActionListener onPressOk)
+  {
+    popupWindow = new JFrame();
+    popupWindow.setResizable(false);
 
-    thePicture.setBounds( 16, 25+60*2, 80, 80 );   // Picture area
-    cp.add( thePicture );                           //  Add to canvas
-    thePicture.clear();
+    Container pane = popupWindow.getContentPane();
+    Container root = popupWindow;
+    root.setLayout(null);
+
+    var popupWidth = 300;
+    var popupHeight = 200;
+    root.setSize( popupWidth, popupHeight );
+    var midpointOfBaseX = rootWindow.getX() + (W / 2);
+    var midpointOfBaseY = rootWindow.getY() + (H / 2);
+    root.setLocation(midpointOfBaseX - (popupWidth / 2), midpointOfBaseY - (popupHeight / 2));
+
+    var label = new JLabel(text);
+    label.setBounds(0, 0, popupWidth, popupHeight / 2);
+    label.setHorizontalAlignment(JLabel.CENTER);
+    pane.add(label);
+
+    var button = new JButton("OK");
+    button.setBounds(50, popupHeight - 70, popupWidth - 16 - 100, 30);
+    button.addActionListener(onPressOk);
+    button.addActionListener(action -> popupWindow.setVisible(false));
+    pane.add(button);
+
+    popupWindow.setVisible(true);
   }
 
    /**
@@ -74,19 +147,110 @@ public class CustomerView extends ViewBase
    * @param modelC   The observed model
    * @param arg      Specific args 
    */
-   
   public void update( Observable modelC, Object arg )
   {
-    super.update(modelC, arg);
+    CustomerModel model = (CustomerModel) modelC;
+    ArrayList<Product> searchResults = (ArrayList<Product>)arg;
 
-    CustomerModel model  = (CustomerModel) modelC;
-    ImageIcon image = model.getPicture();  // Image of product
-    if ( image == null )
-    {
-      thePicture.clear();                  // Clear picture
-    } else {
-      thePicture.set( image );             // Display picture
+    var bagConstraints = new GridBagConstraints();
+    bagConstraints.gridwidth = 1;
+    bagConstraints.ipadx = 5;
+    bagConstraints.ipady = 2;
+    bagConstraints.fill = GridBagConstraints.BOTH;
+    bagConstraints.weightx = 1;
+
+    // draw search results
+    var layout = new GridBagLayout();
+    JPanel scrollPanePanel = new JPanel(layout);
+    int row = 0;
+    for (var product : searchResults) {
+      bagConstraints.gridy = row;
+
+      var pic = new Picture(30, 30);
+      var imageIcon = model.getPicture(product.getProductNum());
+      var image = imageIcon.getImage();
+      var scaledImage = image.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+      pic.set(new ImageIcon(scaledImage));
+
+      var desc = new JLabel(product.getDescription());
+      desc.setBorder(BorderFactory.createLineBorder(Color.black));
+
+      var price = new JLabel("£" + product.getPrice());
+      price.setBorder(BorderFactory.createLineBorder(Color.black));
+      price.setHorizontalAlignment(JLabel.CENTER);
+
+      var stock = new JLabel(String.valueOf(product.getQuantity()));
+      stock.setBorder(BorderFactory.createLineBorder(Color.black));
+      stock.setHorizontalAlignment(JLabel.CENTER);
+
+      var addButton = new JButton("Add");
+      addButton.setEnabled(product.getQuantity() > 0);
+      addButton.addActionListener(x -> {
+        cont.addToBasket(product);
+      });
+
+      scrollPanePanel.add(pic, bagConstraints);
+      scrollPanePanel.add(desc, bagConstraints);
+      scrollPanePanel.add(price, bagConstraints);
+      scrollPanePanel.add(stock, bagConstraints);
+      scrollPanePanel.add(addButton, bagConstraints);
+      row++;
     }
-  }
+    searchScrollPane.setViewportView(scrollPanePanel);
 
+    // draw basket
+    layout = new GridBagLayout();
+    var basketPanel = new JPanel(layout);
+    row = 0;
+    for (var product : model.getBasket())
+    {
+      bagConstraints.gridy = row;
+
+      var desc = new JLabel(product.getDescription());
+      desc.setBorder(BorderFactory.createLineBorder(Color.black));
+      desc.setHorizontalAlignment(JLabel.CENTER);
+
+      var price = new JLabel("£" + product.getPrice());
+      price.setBorder(BorderFactory.createLineBorder(Color.black));
+      price.setHorizontalAlignment(JLabel.CENTER);
+
+      var quantity = new JLabel(String.valueOf(product.getQuantity()));
+      quantity.setBorder(BorderFactory.createLineBorder(Color.black));
+      quantity.setHorizontalAlignment(JLabel.CENTER);
+
+      var addButton = new JButton("+");
+      addButton.setMargin(new Insets(0, 0, 0, 0));
+      addButton.setPreferredSize(new Dimension(20, 20));
+      addButton.addActionListener(x -> cont.incrementProduct(product));
+
+      var subButton = new JButton("-");
+      subButton.setMargin(new Insets(0, 0, 0, 0));
+      subButton.setPreferredSize(new Dimension(20, 20));
+      subButton.addActionListener(x -> cont.decrementProduct(product));
+
+      basketPanel.add(desc, bagConstraints);
+      basketPanel.add(price, bagConstraints);
+      basketPanel.add(addButton, bagConstraints);
+      basketPanel.add(quantity, bagConstraints);
+      basketPanel.add(subButton, bagConstraints);
+      row++;
+    }
+    basketScrollPane.setViewportView(basketPanel);
+
+    // update total
+    var decimalFormat = new DecimalFormat("0.00");
+    decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
+
+    var count = 0;
+    var price = 0.0;
+    for (var product : model.getBasket())
+    {
+      count += product.getQuantity();
+      price += product.getPrice() * product.getQuantity();
+    }
+
+    totalLabel.setText(count + " Items - Total £" + decimalFormat.format(price));
+
+    searchBar.requestFocus();
+  }
 }

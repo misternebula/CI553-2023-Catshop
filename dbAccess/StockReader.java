@@ -14,6 +14,7 @@ import middle.IStockReader;
 
 import javax.swing.*;
 import java.sql.*;
+import java.util.ArrayList;
 
 // There can only be 1 ResultSet opened per statement
 // so no simultaneous use of the statement object
@@ -172,4 +173,26 @@ public class StockReader implements IStockReader
     return new ImageIcon( filename );
   }
 
+  public synchronized ArrayList<Product> getProducts()
+          throws StockException
+  {
+    ArrayList<Product> products = new ArrayList<>();
+    ArrayList<String> productsNumbers = new ArrayList<>();
+    try {
+      ResultSet rs = getStatementObject().executeQuery("select ProductTable.productNo from ProductTable");
+      while (rs.next())
+      {
+        productsNumbers.add(rs.getString("productNo"));
+      }
+      rs.close();
+
+      for (var productNumber : productsNumbers) {
+        products.add(getDetails(productNumber));
+      }
+
+      return products;
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }

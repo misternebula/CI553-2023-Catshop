@@ -2,86 +2,165 @@ package clients.customer;
 
 import catalogue.Basket;
 import catalogue.Product;
-import clients.ModelBase;
 import debug.DEBUG;
-import middle.MiddleFactory;
-import middle.IOrderProcessing;
-import middle.StockException;
-import middle.IStockReader;
+import middle.*;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Observable;
+import java.util.stream.Collectors;
 
 /**
  * Implements the Model of the customer client
  * @author  Mike Smith University of Brighton
  * @version 1.0
  */
-public class CustomerModel extends ModelBase
+public class CustomerModel extends Observable
 {
+  private Basket      theBasket  = null;          // Bought items
 
-	private ImageIcon thePic = null;
+  private IStockReaderWriter theStock     = null;
+  private IOrderProcessing theOrder     = null;
 
-	/*
-	 * Construct the model of the Customer
-	 * @param mf The factory to create the connection objects
-	 */
-	public CustomerModel(MiddleFactory mf)
-	{
-		super(mf);
-	}
+  private String searchString;
 
-	/**
-	 * Check if the product is in Stock
-	 * @param productNum The product number
-	 */
-	public void doCheck(String productNum )
-	{
-		var stockAmount = getStockAmount(productNum);
-		var pr = getProduct(productNum);
+  /*
+   * Construct the model of the Customer
+   * @param mf The factory to create the connection objects
+   */
+  public CustomerModel(MiddleFactory mf)
+  {
+    try                                          // 
+    {  
+      theStock = mf.makeStockReadWriter();           // Database access
+      theOrder = mf.makeOrderProcessing();
+    } catch ( Exception e )
+    {
+      DEBUG.error("CustomerModel.constructor\n" +
+                  "Database not created?\n%s\n", e.getMessage() );
+    }
+    makeBasket();                    // Initial Basket
+  }
 
-		String theAction = getAction(productNum);
+  /**
+   * return the Basket of products
+   * @return the basket of products
+   */
+  public Basket getBasket()
+  {
+    return theBasket;
+  }
 
-		try {
-			if (stockAmount >= 0)
-			{
-				pr.setQuantity(1);
-				thePic = theStock.getImage(productNum);
-				displayText = pr.getDescription() + "\nPrice : £" + pr.getPrice() + "\n";
+  /**
+   * Notifies observers with search results based on the search string
+   * @param search The search input
+   */
+  public void doCheck(String search )
+  {
+    searchString = search;
 
-				if (stockAmount == 0)
-					displayText += "This item is out of stock.";
-				else
-					displayText += stockAmount + " in stock.";
-			}
-			else{
-				displayText = "Invalid product ID.";
-			}
-		} catch(StockException e)
-		{
-			DEBUG.error("CustomerClient.doCheck()\n%s", e.getMessage() );
-			theAction = e.getMessage();
-		}
+    try {
+      var products = theStock.getProducts();
+      var searchResults = new ArrayList<>();
 
-		setChanged();
-		notifyObservers(theAction);
-	}
+      var searchWords = search.toLowerCase().split(" ");
 
-	/**
-	 * Return a picture of the product
-	 * @return An instance of an ImageIcon
-	 */
-	public ImageIcon getPicture()
-	{
-		return thePic;
-	}
+      for (var product : products)
+      {
+        if (Arrays.stream(searchWords).anyMatch(product.getDescription().toLowerCase()::contains)
+                || product.getProductNum().equalsIgnoreCase(search))
+        {
+          searchResults.add(product);
+        }
+      }
 
-	/**
-	 * ask for update of view callled at start
-	 */
-	private void askForUpdate()
-	{
-		setChanged(); notifyObservers("START only"); // Notify
-	}
+      setChanged();
+      notifyObservers(searchResults);
+    } catch (StockException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public void addToBasket(Product product)
+  {
+    var pr = new Product(product);
+    pr.setQuantity(1);
+    theBasket.add(pr);
+    doCheck(searchString);
+  }
+
+  public void incrementProduct(Product product)
+  {
+    product.setQuantity(product.getQuantity() + 1);
+    doCheck(searchString);
+  }
+
+  public void decrementProduct(Product product)
+  {
+    product.setQuantity(product.getQuantity() - 1);
+
+    if (product.getQuantity() == 0)
+    {
+      theBasket.remove(product);
+    }
+
+    doCheck(searchString);
+  }
+
+  public int paymentFinished()
+  {
+    if (theBasket.isEmpty())
+    {
+      // Should not happen if using CustomerView.
+      // This check is here just in case, to stop bad orders going through the system.
+      return 0;
+    }
+
+    try {
+      for (var product : theBasket)
+      {
+        theStock.buyStock(product.getProductNum(), product.getQuantity());
+      }
+
+      theBasket.setOrderNum(theOrder.uniqueNumber());
+      var finishedOrderNum = theBasket.getOrderNum();
+      theOrder.newOrder(theBasket);
+      makeBasket();
+      return finishedOrderNum;
+    } catch (OrderException | StockException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
+   * Returns the image of a product.
+   * @param pn The product number.
+   * @return ImageIcon
+   */
+  public ImageIcon getPicture(String pn)
+  {
+    try {
+      return theStock.getImage(pn);
+    } catch (StockException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  /**
+   * Make a new Basket
+   * @return an instance of a new Basket
+   */
+  protected void makeBasket()
+  {
+    theBasket = new Basket();
+
+    if (searchString != null)
+    {
+      // refresh view
+      doCheck(searchString);
+    }
+  }
 }
 
