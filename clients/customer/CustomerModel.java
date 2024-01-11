@@ -7,7 +7,9 @@ import middle.*;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Observable;
+import java.util.stream.Collectors;
 
 /**
  * Implements the Model of the customer client
@@ -51,7 +53,7 @@ public class CustomerModel extends Observable
   }
 
   /**
-   * Check if the product is in Stock
+   * Notifies observers with search results based on the search string
    * @param search The search input
    */
   public void doCheck(String search )
@@ -60,12 +62,14 @@ public class CustomerModel extends Observable
 
     try {
       var products = theStock.getProducts();
-
       var searchResults = new ArrayList<>();
+
+      var searchWords = search.toLowerCase().split(" ");
 
       for (var product : products)
       {
-        if (product.getDescription().toLowerCase().contains(search.toLowerCase()))
+        if (Arrays.stream(searchWords).anyMatch(product.getDescription().toLowerCase()::contains)
+                || product.getProductNum().equalsIgnoreCase(search))
         {
           searchResults.add(product);
         }
