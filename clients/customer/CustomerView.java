@@ -100,9 +100,9 @@ public class CustomerView implements Observer
     popupWindow = new JFrame();
     popupWindow.setResizable(false);
 
-    Container pane = popupWindow.getContentPane();    // Content Pane
-    Container root = (Container) popupWindow;         // Root Window
-    pane.setLayout(null);                             // No layout manager
+    Container pane = popupWindow.getContentPane();
+    Container root = popupWindow;
+
     var popupWidth = 300;
     var popupHeight = 200;
     root.setSize( popupWidth, popupHeight );
