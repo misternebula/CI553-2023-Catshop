@@ -40,6 +40,6 @@ public class CustomerController
 
   public Basket getBasket() { return model.getBasket(); }
 
-  public void makeNewBasket() { model.makeBasket(); }
+  public void paymentFinished() { model.paymentFinished(); }
 }
 

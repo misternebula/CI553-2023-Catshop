@@ -85,8 +85,10 @@ public class CustomerView implements Observer
     JButton finishButton = new JButton("Finish");
     finishButton.setBounds(10, 310, 229, 34);
     finishButton.addActionListener(actionEvent -> {
-      openPopupWindow("Your order number is " + cont.getBasket().getOrderNum() + ".", rootWindow, action -> {
-        cont.makeNewBasket();
+      openPopupWindow("Please pay.", rootWindow, action -> {
+        openPopupWindow("Your order number is " + cont.getBasket().getOrderNum() + ".", rootWindow, a -> {
+          cont.paymentFinished();
+        });
       });
     });
     cp.add(finishButton);

@@ -108,6 +108,16 @@ public class CustomerModel extends Observable
     doCheck(searchString);
   }
 
+  public void paymentFinished()
+  {
+    try {
+      theOrder.newOrder(theBasket);
+    } catch (OrderException e) {
+      throw new RuntimeException(e);
+    }
+    makeBasket();
+  }
+
   /**
    * Returns the image of a product.
    * @param pn The product number.
