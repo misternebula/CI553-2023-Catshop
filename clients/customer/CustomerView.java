@@ -144,18 +144,19 @@ public class CustomerView implements Observer
     CustomerModel model = (CustomerModel) modelC;
     ArrayList<Product> searchResults = (ArrayList<Product>)arg;
 
+    var bagConstraints = new GridBagConstraints();
+    bagConstraints.gridwidth = 1;
+    bagConstraints.ipadx = 5;
+    bagConstraints.ipady = 2;
+    bagConstraints.fill = GridBagConstraints.BOTH;
+    bagConstraints.weightx = 1;
+
     // draw search results
     var layout = new GridBagLayout();
     JPanel scrollPanePanel = new JPanel(layout);
     int row = 0;
     for (var product : searchResults) {
-      var bagConstraints = new GridBagConstraints();
-      bagConstraints.gridwidth = 1;
       bagConstraints.gridy = row;
-      bagConstraints.ipadx = 5;
-      bagConstraints.ipady = 2;
-      bagConstraints.fill = GridBagConstraints.BOTH;
-      bagConstraints.weightx = 1;
 
       var pic = new Picture(30, 30);
       var imageIcon = model.getPicture(product.getProductNum());
@@ -194,13 +195,7 @@ public class CustomerView implements Observer
     row = 0;
     for (var product : model.getBasket())
     {
-      var bagConstraints = new GridBagConstraints();
-      bagConstraints.gridwidth = 1;
       bagConstraints.gridy = row;
-      bagConstraints.ipadx = 5;
-      bagConstraints.ipady = 2;
-      bagConstraints.fill = GridBagConstraints.BOTH;
-      bagConstraints.weightx = 1;
 
       var desc = new JLabel(product.getDescription());
       desc.setBorder(BorderFactory.createLineBorder(Color.black));
